@@ -3,7 +3,7 @@
 from __future__ import print_function
 import math
 
-from src.org.combinators.ctp.py.coverage import run_tsp
+from src.org.combinators.ctp.py.graph_tools import run_tsp
 
 if __name__ == '__main__':
     data = {}
