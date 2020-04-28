@@ -1,0 +1,36 @@
+"""Simple travelling salesman problem on a circuit board."""
+from __future__ import print_function
+
+import sys
+
+from scipy.sparse import csr_matrix
+import numpy as np
+from scipy.sparse.csgraph import minimum_spanning_tree
+from scipy.sparse.csgraph._traversal import depth_first_order
+from scipy.sparse.csgraph._traversal import breadth_first_order
+
+np.set_printoptions(threshold=sys.maxsize)
+np.set_printoptions(suppress=True)
+
+
+def create_data_model():
+    data = {}
+    data['distances'] = np.array(
+$substitute$
+    )
+    data['num_vehicles'] = 1
+    data['depot'] = 30
+    return data
+
+
+def main():
+    v = create_data_model()['distances']
+    X = csr_matrix(v, dtype=float)
+    Tcsr = minimum_spanning_tree(X)
+    v,preds = breadth_first_order(Tcsr, 0, directed=False, return_predecessors=True)
+    print(f""" {{"nodes": {np.array2string(v, separator=", ")},""")
+    print(f""" "preds": {np.array2string(preds, separator=", ")}}}""")
+
+
+if __name__ == '__main__':
+    main()

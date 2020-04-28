@@ -1,0 +1,18 @@
+import sys
+
+sys.path.append("/home/tristan/projects/ctp_py/src")
+
+from org.combinators.ctp.py.celldecomposition.vcd_2d import *
+from org.combinators.ctp.py.celldecomposition.scene_object import *
+
+np.set_printoptions(threshold=sys.maxsize)
+
+
+def run_gen_scene_2d():
+$substitute$
+    vcd = Vcd2D(v, scene_objects, scene_objects_aabb, scene_size)
+    vcd.run()
+
+
+if __name__ == '__main__':
+    run_gen_scene_2d()

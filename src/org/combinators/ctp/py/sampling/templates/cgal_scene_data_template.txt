@@ -1,0 +1,4 @@
+import numpy as np
+import fcl
+
+$cgal_scene_data.data$

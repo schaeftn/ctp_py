@@ -1,0 +1,10 @@
+import numpy as np
+import fcl
+import pymesh
+
+def loadModels(scene_file_location, robot_file_location):
+    m1 = pymesh.load_mesh(scene_file_location)
+    m2 = pymesh.load_mesh(robot_file_location)
+    return m1, m2
+
+$fcl_scene_data.data$

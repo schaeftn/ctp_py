@@ -1,0 +1,18 @@
+import sys
+
+sys.path.append("/home/tristan/projects/ctp_py/src")
+
+from org.combinators.ctp.py.celldecomposition.vcd_2d import *
+from org.combinators.ctp.py.celldecomposition.scene_object import *
+from org.combinators.ctp.py.celldecomposition.triangulate2d_params import triangulate2d_params
+
+np.set_printoptions(threshold=sys.maxsize)
+
+
+def run_gen_scene_2d():
+$substitute$
+    triangulate2d_params(scene_objects, scene_size)
+
+
+if __name__ == '__main__':
+    run_gen_scene_2d()

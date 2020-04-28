@@ -1,0 +1,39 @@
+from __future__ import print_function
+
+import sys
+
+import networkx as nx
+from scipy.sparse import csr_matrix
+import numpy as np
+from scipy.sparse.csgraph import minimum_spanning_tree
+from scipy.sparse.csgraph._shortest_path import shortest_path
+from scipy.sparse.csgraph._traversal import depth_first_order
+
+np.set_printoptions(threshold=sys.maxsize)
+np.set_printoptions(suppress=True)
+
+
+def main():
+    def dist(a, b):
+        x1 = node_list[a][0]
+        x2 = node_list[a][1]
+        y1 = node_list[b][0]
+        y2 = node_list[b][1]
+        return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
+
+    g = nx.Graph()
+    node_list = $nodes$
+    g.add_nodes_from(
+        $nodeIndices$
+         )
+    g.add_weighted_edges_from(
+        [
+            $edges$
+        ])
+
+
+    print(nx.astar_path(g, $startIndex$, $goalIndex$, dist))
+
+
+if __name__ == '__main__':
+    main()

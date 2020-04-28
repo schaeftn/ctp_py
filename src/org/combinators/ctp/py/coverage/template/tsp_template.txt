@@ -1,0 +1,11 @@
+import sys
+
+sys.path.append("/home/tristan/projects/ctp_graph_tools_py/src")
+
+from org.combinators.ctp.py.coverage.tsp import *
+from math import inf
+
+if __name__ == '__main__':
+    data = {}
+$substitute$
+    run_tsp(data)

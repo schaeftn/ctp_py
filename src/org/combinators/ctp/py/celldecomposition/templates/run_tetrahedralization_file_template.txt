@@ -1,0 +1,36 @@
+import sys
+
+sys.path.append("/home/tristan/projects/ctp_py/src")
+
+import pymesh
+import numpy as np
+
+np.set_printoptions(threshold=sys.maxsize)
+np.set_printoptions(suppress=True)
+
+
+def run_gen_scene_3d():
+    mesh_location = $run_tetrahedralization_file.envFile$
+    m1 = pymesh.load_mesh(mesh_location)
+    box = pymesh.generate_box_mesh($run_tetrahedralization_file.boxminmax$, using_simplex=True)
+    bool_mesh = pymesh.boolean(box, m1, operation="difference")
+    output_mesh = pymesh.resolve_self_intersection(bool_mesh, engine='auto')
+    output_mesh, info_dict = pymesh.remove_duplicated_faces(output_mesh, fins_only=False)
+
+    tetgen = pymesh.tetgen()
+    tetgen.points = output_mesh.vertices
+    tetgen.triangles = output_mesh.faces
+    tetgen.max_tet_volume = 2000000.0
+    tetgen.max_radius_edge_ratio = 2000000.0
+    tetgen.verbosity = 0
+    tetgen.run()
+    mesh_2 = tetgen.mesh
+
+    print("""{ "vertices" : """)
+    print(f"""{np.array2string(mesh_2.vertices, precision=6, separator=", ", floatmode="fixed")},""")
+    print(""" "cells" : """)
+    print(f"""{np.array2string(mesh_2.voxels, separator=", ")}}}""")
+
+
+if __name__ == '__main__':
+    run_gen_scene_3d()
