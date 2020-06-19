@@ -23,9 +23,13 @@ class FclStateValidator(ob.StateValidityChecker):
         r3_state = [ompl_state.getX(), ompl_state.getY(), ompl_state.getZ()]
         quaternion_data = [ompl_state.rotation().w, ompl_state.rotation().x, ompl_state.rotation().y,
                            ompl_state.rotation().z]
-
+        print(f"isValid for: {r3_state}, {quaternion_data}")
         fcl_transform = fcl.Transform(np.array(quaternion_data), np.array(r3_state))
-        robot_collision_object = fcl.CollisionObject(fcl_scene_data.robot_mesh, fcl_transform)
+        if hasattr(fcl_scene_data, 'robot_mesh'):
+            robot_collision_object = fcl.CollisionObject(fcl_scene_data.robot_mesh, fcl_transform)
+        else:
+            print(f"defaulting to unit sphere")
+            robot_collision_object = fcl.CollisionObject(fcl.Sphere(1.0), fcl_transform)
 
 
         for (env_co, transform) in fcl_scene_data.fcl_objs:

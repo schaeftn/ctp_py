@@ -1,6 +1,6 @@
 import sys
 
-sys.path.append("/home/tristan/projects/ctp_sampling_py/src")
+sys.path.append("/home/tristan/projects/ctp_py/src")
 
 from org.combinators.ctp.py.sampling.FclMotionValidator import *
 from org.combinators.ctp.py.sampling.FclStateValidator import *
@@ -86,14 +86,27 @@ class plan:
             }
             return switcher.get(samplerId)
 
+        def getStateSpaceSampler(sp):
+            print(f"getSampler")
+            samplerId = Samplers.CUSTOM
+            switcher = {
+                Samplers.UNIFORM: ob.CompoundStateSampler(sp),
+                Samplers.GAUSSIAN: ob.CompoundStateSampler(sp),
+                Samplers.CUSTOM: PathRefinementSpSampler(sp)
+            }
+            print(f"returning: {switcher.get(samplerId)}")
+            return switcher.get(samplerId)
+
 $sbmp_main.startstop$
 
+        #space.setStateSamplerAllocator(ob.StateSamplerAllocator(getStateSpaceSampler))
+        $sbmp_main.spaceSampler$
         self.si = ob.SpaceInformation(space)
         #self.si.setMotionValidator(ob.DiscreteMotionValidator(self.si))
         $sbmp_main.motionValidator$
         $sbmp_main.stateValidator$
         $sbmp_main.stateValidatorResolution$
-        self.si.setValidStateSamplerAllocator(ob.ValidStateSamplerAllocator(getSampler))
+        $sbmp_main.validStateSamplerAlloc$
 
 $sbmp_main.cost$
         self.ss = og.SimpleSetup(self.si)
@@ -103,17 +116,35 @@ $sbmp_main.cost$
         self.ss.getPlanner().checkValidity()
 
         self.solve()
+        np.set_printoptions(formatter={'float':'{:0.5f}'.format})
+        #print(f"solution path:")
+        #[print(f"RealVectorState {v}") for v in path_data.path_list]
 
     def solve(self):
         solved = self.ss.solve(10.0)
         if solved and self.ss.haveExactSolutionPath():
             print("Found solution:")
+            $sbmp_main.simplify$
         else:
             print("No exact solution found")
 
         data = ob.PlannerData(self.si)
         self.ss.getPlannerData(data)
-        # print(data.printGraphML())
+
+        explored_states = []
+        for i in range(0, data.numVertices()):
+            coords = []
+            state = data.getVertex(i).getState()
+
+            coords.append(state.getX())
+            coords.append(state.getY())
+            coords.append(state.getZ())
+            explored_states.insert(i, coords)
+        explored_states = []
+        print(f"solution path:")
+
+        print(f"""{{"exploredStates" : {explored_states}}}""")
+
         if self.ss.haveSolutionPath():
             print(f"solution path: {self.ss.getSolutionPath()}")
         else:
@@ -128,5 +159,4 @@ $sbmp_main.cost$
 
 
 if __name__ == '__main__':
-    print("Using default uniform sampler:")
     p = plan()
