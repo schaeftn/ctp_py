@@ -65,16 +65,19 @@ class PathRefinementSampler(ob.ValidStateSampler):
         s2 = math.sin(t2)
         return [s1 * r1, c1 * r1, s2 * r2, c2 * r2]
 
-class PathRefinementSpSampler(ob.StateSampler):
-    def __init__(self, sp):
+class PathRefinementSpSampler(ob.CompoundStateSampler):
+    def __init__(self, *args, **kwargs):
+        print("PR init start")
+        sp = args[0]
         super(PathRefinementSpSampler, self).__init__(sp)
         self.si_ = sp
         self.name_ = "Path refinement sampler"
         self.rng_ = ou.RNG()
         self.path = path_data.path_list
-        print("PR INIT")
+        print("PR init stop")
 
     def sample(self, *args, **kwargs):
+        print("PR sample")
         r = self.rng_.uniformReal(0, 1)
         upper_index = random.choice(range(len(self.path)-1))+1
         lower_index = upper_index - 1

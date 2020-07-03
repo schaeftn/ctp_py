@@ -1,0 +1,46 @@
+import sys
+
+sys.path.append("/home/tristan/projects/ctp_py/src")
+
+import pymesh
+import numpy as np
+
+np.set_printoptions(threshold=sys.maxsize)
+np.set_printoptions(suppress=True)
+
+
+def run_gen_scene_3d():
+    mesh_location = "/home/tristan/projects/ctp_py/resources/3D/ae_zz_99.stl"
+    m1 = pymesh.load_mesh(mesh_location)
+    box = pymesh.generate_box_mesh($run_tetrahedralization_file.boxminmax$, using_simplex=True)
+
+    pymesh.save_mesh("/home/tristan/projects/ctp_py/resources/mesh_processing/m1_env_raw.msh", m1)
+    env_mesh = pymesh.resolve_self_intersection(m1, engine='auto')
+    pymesh.save_mesh("/home/tristan/projects/ctp_py/resources/mesh_processing/m1_env_modulo_intersections.msh", env_mesh)
+    pymesh.save_mesh("/home/tristan/projects/ctp_py/resources/mesh_processing/m1_box.msh", box)
+
+    bool_mesh = pymesh.boolean(box, m1, operation="difference")
+    pymesh.save_mesh("/home/tristan/projects/ctp_py/resources/mesh_processing/m1_bool.msh", bool_mesh)
+
+    tetgen = pymesh.tetgen()
+    tetgen.points = bool_mesh.vertices
+    tetgen.triangles = bool_mesh.faces
+    tetgen.max_tet_volume = 2000000.0
+    tetgen.max_radius_edge_ratio = 2000.0
+    tetgen.verbosity = 0
+    tetgen.run()
+    mesh_2 = tetgen.mesh
+
+    mesh_2.enable_connectivity()
+    adjacency = ',\n'.join(f"""{np.array2string(np.array(mesh_2.get_voxel_adjacent_voxels(i)), separator=", ")}""" for i in range(len(mesh_2.voxels)))
+    mesh_2.add_attribute("voxel_centroid")
+    centroids = mesh_2.get_voxel_attribute("voxel_centroid")
+
+    print("""{ "centroids" : """)
+    print(f"""{np.array2string(centroids, precision=6, separator=", ", floatmode="fixed")},""")
+    print(""" "adjacency" : """)
+    print(f"""[{adjacency}]}}""")
+
+
+if __name__ == '__main__':
+    run_gen_scene_3d()

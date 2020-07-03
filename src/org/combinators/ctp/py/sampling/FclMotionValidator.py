@@ -82,10 +82,11 @@ class FclMotionValidator(ob.MotionValidator):
         #         print(f"Warn Different result: {r2} {ret2}")
         #         ret2 = r2
 
-        if ret2 == 1.0 and result2.is_collide:
-            print("WARN: Inconsistent CCD results.")
-        if result2.time_of_contact != ret2:
-            print("WARN: Inconsistent CCD results.")
+        #if ret2 == 1.0 and result2.is_collide:
+            #print(f"WARN: Inconsistent CCD results. result2.is_collide: {result2.is_collide}, ret2 == 1.0: {ret2 == 1.0}")
+            #print(f"WARN: Additional Info: result2.time_of_contact: {result2.time_of_contact}, ret2: {ret2}")
+        #if result2.time_of_contact != ret2:
+            #print(f"WARN: Inconsistent CCD results. result2.time_of_contact: {result2.time_of_contact}, ret2: {ret2}")
         return ret2
 
 

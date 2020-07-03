@@ -88,7 +88,7 @@ class plan:
 
         def getStateSpaceSampler(sp):
             print(f"getSampler")
-            samplerId = Samplers.CUSTOM
+            samplerId = $sbmp_main.samplerMember$
             switcher = {
                 Samplers.UNIFORM: ob.CompoundStateSampler(sp),
                 Samplers.GAUSSIAN: ob.CompoundStateSampler(sp),
