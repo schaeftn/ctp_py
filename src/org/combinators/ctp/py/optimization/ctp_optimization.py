@@ -1,8 +1,8 @@
 #!/usr/bin/python
 import asyncio
-import math, sys
-from functools import partial
-from subprocess import Popen, PIPE
+import concurrent
+import sys
+from functools import partial, partialmethod
 
 sys.path.append('scripts')
 sys.path.append('/home/tristan/projects/hypermapper/scripts')
@@ -13,6 +13,8 @@ from org.combinators.ctp.py.optimization import mqttClient
 import hypermapper
 import uuid
 import paho.mqtt.client as mqtt
+
+use_simplification = True
 
 print("1")
 parameters_file = "/home/tristan/projects/ctp_py/src/org/combinators/ctp/py/optimization/ctp_scenario.json"
@@ -73,11 +75,11 @@ def get_dimensionality_string(i):
 
 
 # check async possible?
-def ctp_function(X):
+def ctp_function(X, problem_instance):
     planner = X['planner']
     sampler = X['sampler']
     motion_validator = X['motionValidator']
-    simplification_time = X['simplification_time']
+    # simplification_time = X['simplification_time']
     planning_time = X['planning_time']
 
     new_uuid = uuid.uuid4()
@@ -89,9 +91,11 @@ def ctp_function(X):
 "costs" : "not_specified",
 "optObjective" : "not_specified",
 "simplification" : "sbmp_use_simplification",
-"sceneInput" : "sbmp_from_data_file",
+"sceneInput" : "scene_input_data_file",
 "dimensionality" : "dimensionality_three_d_t",
-"id" : "{new_uuid}"
+"id" : "{new_uuid}",
+"configurableAlg" : true,
+"withStates" : false
 }}
 """
 
@@ -99,36 +103,77 @@ def ctp_function(X):
     loop = asyncio.get_event_loop()
     f = loop.create_future()
     # loop.create_task(mqttRequest(client, json_string, fooo[0]))
-    print("setting new on_message")
+    print("Setting new on_message")
     client.on_message = partial(mqttClient.on_message, future=f, asyncloop=loop)
-    print("subscribung")
+    print(f"Subscribing to topic bmInitResponse.{new_uuid}")
     client.subscribe(f"bmInitResponse.{new_uuid}", 2)
-    print("starting")
     client.loop_start()
     print("Waiting for init request to complete.")
     loop.run_until_complete(f)
-    print("Stopping mqtt loop")
+    print("Future completed. Stopping mqtt loop")
     client.loop_stop()
 
-    if f.result() == 1: # Success
+    if f.result() == 1:  # Success
+        bmStartResponseTopic = f"bmStartResponse.{new_uuid}"
+        bmGenericInputResponseTopic = f"bmGenericInputResponse.{new_uuid}"
+
         client.subscribe(f"bmResult.{new_uuid}", 2)
-        mqttClient.send_message(client, "Abstract.cfg", f"bmGenericInput.{new_uuid}")
-        mqttClient.send_message(client, """{"iterations" : 10,"async" : false,"maxTime" : 10,"maxMem" : 1024}""",
-                                f"bmStartRequest.{new_uuid}")
-        loop2 = asyncio.get_event_loop()
+        print(f"Subscribing to {bmStartResponseTopic}")
+        print(f"Subscribing to {bmGenericInputResponseTopic}")
+        client.subscribe(bmStartResponseTopic, 2)
+        client.subscribe(bmGenericInputResponseTopic, 2)
 
-        print("Messages sent. Waiting for response.")
+        loop4 = asyncio.get_event_loop()
+        fGenericInputResponse = loop4.create_future()
+        client.on_message = partial(mqttClient.on_message, future=fGenericInputResponse, asyncloop=loop4)
         client.loop_start()
+        mqttClient.send_message(client,
+                                f"""["{problem_instance}.cfg", "--computationtime={planning_time} --simplificationtime=2.0"]""",
+                                # f"""{problem_instance}.cfg""",
+                                f"bmGenericInput.{new_uuid}")
+        try:
+            print(f"Waiting for bmGenericInputResponse {new_uuid} ...")
+            loop4.run_until_complete(asyncio.wait_for(fGenericInputResponse, 10.0))
+        except Exception as e:
+            client.loop_stop()
+            print(f"TimeoutError")
+            output = {}
+            output['pathlength'] = 5000000.0
+            output['computationtime'] = 5000000.0
+            output['failures'] = 5000000.0
+            print(f"Aborting with output: {output}")
+            return output
 
+
+        loop3 = asyncio.get_event_loop()
+        fStartResponse = loop3.create_future()
+        client.on_message = partial(mqttClient.on_message, future=fStartResponse, asyncloop=loop3)
+        mqttClient.send_message(client,
+                                """{"iterations" : 10,"async" : true,"maxTime" : 10,"maxMem" : 1024}""",
+                                f"bmStartRequest.{new_uuid}")
+
+        try:
+            loop3.run_until_complete(asyncio.wait_for(fStartResponse, 10.0))
+        except Exception as e:
+            client.loop_stop()
+            print(f"Timeout for StartResponse")
+            output = {}
+            output['pathlength'] = 5000000.0
+            output['computationtime'] = 5000000.0
+            output['failures'] = 5000000.0
+            print(f"Aborting with output: {output}")
+            return output
+
+        print("Messages sent. Waiting for result.")
+        loop2 = asyncio.get_event_loop()
+        # client.loop_stop()
+        # client.loop_start()
         f2 = loop2.create_future()
         client.on_message = partial(mqttClient.on_message, future=f2, asyncloop=loop2)
-        print("loopUntil complete")
         loop2.run_until_complete(f2)
-        print("loopuntil after")
         client.loop_stop()
 
-        print("receivedResult")
-
+        print("Received result.")
         output = f2.result()
     else:
         output = {}
@@ -136,14 +181,10 @@ def ctp_function(X):
         output['computationtime'] = 5000000.0
         output['failures'] = 5000000.0
 
-    print(f"output: {output}")
+    print(f"Output: {output}")
     return output
 
 
-def main():
-    # printIndices()
-    hypermapper.optimize(parameters_file, ctp_function)
-    print("End of ctp optimization.")
 
 
 def printIndices():
@@ -157,5 +198,11 @@ def printIndices():
 
 if __name__ == "__main__":
     print("Starting Main")
-    main()
-    client.loop_forever()
+    import argparse
+    parser = argparse.ArgumentParser(description='ctp optimization')
+    parser.add_argument('--problem', default="Abstract", help='name of the problem instance', type=str)
+
+    args = parser.parse_args()
+    ctp_fun = partial(ctp_function, problem_instance=args.problem)
+    hypermapper.optimize(parameters_file, ctp_fun)
+    print("End of ctp optimization.")
