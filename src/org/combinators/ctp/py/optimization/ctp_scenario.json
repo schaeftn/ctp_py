@@ -1,12 +1,19 @@
 {
     "application_name": "ctp",
     "optimization_objectives": ["pathlength", "computationtime","failures"],
-    "optimization_iterations": 10,
+    "optimization_iterations": 150,
+    "feasible_output": {
+        "name": "Valid",
+        "true_value": "true",
+        "false_value": "false",
+        "enable_feasible_predictor": false,
+        "enable_feasible_predictor_grid_search_on_recall_and_precision": false
+    },
     "input_parameters" : {
         "planner": {
             "parameter_type" : "ordinal",
             "values" : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
-            "parameter_default" : 0
+            "parameter_default" : 16
         },
         "sampler": {
             "parameter_type" : "ordinal",
@@ -18,14 +25,9 @@
             "values" : [0,1],
             "parameter_default" : 0
         },
-        "simplification_time": {
-            "parameter_type" : "real",
-            "values" : [0,10],
-            "parameter_default" : 2
-        },
         "planning_time": {
             "parameter_type" : "real",
-            "values" : [2,500],
+            "values" : [2,20],
             "parameter_default" : 10
         }
     }
