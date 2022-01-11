@@ -21,7 +21,7 @@ except ImportError:
 
 
 class WAFRRobotStateValidator(ob.StateValidityChecker):
-    def __init__(self,package):
+    def __init__(self,package,environment):
         self.tm = urdf.UrdfTransformManager()
         self.meshes = []
         self.clms = []
@@ -32,7 +32,9 @@ class WAFRRobotStateValidator(ob.StateValidityChecker):
             clm = CollisionManager()
             clm.add_object(i,tmesh)
             self.clms.append(clm)
-            self.meshes.append(tmesh)            
+            self.meshes.append(tmesh)  
+        self.env_clm = CollisionManager()
+        self.env_clm.add_object('env',trimesh.load_mesh(environment))
         self.tfts = list(filter(lambda x: x[0].isdigit(), self.tm.nodes))
         
     def getSamplingSpace(self):
@@ -74,7 +76,7 @@ class WAFRRobotStateValidator(ob.StateValidityChecker):
             for id,clm in enumerate(self.clms):
                 req = fcl.CollisionRequest()
                 result = fcl.CollisionResult()
-                ret = fcl.collide(clm._objs[id]['obj'], , req, result)             
+                ret = fcl.collide(clm._objs[id]['obj'], self.env_clm._objs['env']['obj'], req, result)             
                 if result.is_collision:
                     return False
         return True       
