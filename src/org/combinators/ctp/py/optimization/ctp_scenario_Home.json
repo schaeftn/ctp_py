@@ -29,7 +29,7 @@
         },
         "planning_time": {
             "parameter_type" : "real",
-            "values" : [2,40]
+            "values" : [30,300]
         }
     }
 }

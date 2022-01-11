@@ -15,32 +15,100 @@ def on_connect(client, userdata, flags, rc):
     # reconnect then subscriptions will be renewed.
     #client.subscribe("$SYS/#")
 
+
+# The callback for when a PUBLISH message is received from the server.
+def on_init_message(client, userdata, msg, future, asyncloop):
+    print(msg.topic + " " + f""""{str(msg.payload.decode("utf-8"))}""")
+
+    if msg.topic.startswith('bmInitResponse'):
+        if str(msg.payload.decode("utf-8")).startswith('Success'):
+            print("mqtt client init response: success, returning 1")
+            asyncloop.call_soon_threadsafe(cb, future.set_result(1))
+        else:
+            print("Benchmark init: received failure message. Discarding run.")
+            asyncloop.call_soon_threadsafe(cb, future.set_result(0))
+
+
+# The callback for when a PUBLISH message is received from the server.
+def on_result_message(client, userdata, msg, future, asyncloop):
+    print(msg.topic + " " + f""""{str(msg.payload.decode("utf-8"))}""")
+
+    if msg.topic.startswith('bmResult'):
+        msg_payload = str(msg.payload.decode("utf-8"))
+        # print(f"""Decoding bmResult {msg_payload}""")
+        t = json.load(StringIO(msg_payload))
+        print(f"""Done decoding bmResult. Decoded dict: {t}""")
+
+        dct = {}
+        dct['Valid'] = 'true'
+
+        if t['pathLengths']:
+            dct['pathlength'] = sum(t['pathLengths']) / len(t['pathLengths'])
+        else:
+            dct['pathlength'] = 5000000.0
+            dct['Valid'] = "false"
+
+        if t['computationTimes']:
+            dct['computationtime'] = sum(t['computationTimes']) / len(t['computationTimes'])
+        else:
+            dct['computationtime'] = 5000000.0
+            dct['Valid'] = "false"
+
+        dct['failures'] = float(t['failures'])
+
+        print(f"returning dct: {dct}")
+        asyncloop.call_soon_threadsafe(cb, future.set_result(dct))
+
+    # The callback for when a PUBLISH message is received from the server.
+def on_start_message(client, userdata, msg, future, asyncloop):
+    print(msg.topic + " " + f""""{str(msg.payload.decode("utf-8"))}""")
+
+    if msg.topic.startswith('bmStartResponse'):
+        print("Received startResponse.")
+        asyncloop.call_soon_threadsafe(cb, future.set_result(1))
+
+
+# The callback for when a PUBLISH message is received from the server.
+def on_input_message(client, userdata, msg, future, asyncloop):
+    print(msg.topic + " " + f""""{str(msg.payload.decode("utf-8"))}""")
+
+    if msg.topic.startswith('bmGenericInputResponse'):
+        print("Received inputResponse.")
+        asyncloop.call_soon_threadsafe(cb, future.set_result(1))
+
+
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg, future, asyncloop):
     print(msg.topic + " " + f""""{str(msg.payload.decode("utf-8"))}""")
 
     if msg.topic.startswith('bmResult'):
         msg_payload = str(msg.payload.decode("utf-8"))
-        print(f"""Decoding bmResult {msg_payload}""")
+        # print(f"""Decoding bmResult {msg_payload}""")
         t = json.load(StringIO(msg_payload))
-        print(f"""Done decoding bmResult.""")
+        print(f"""Done decoding bmResult. Decoded dict: {t}""")
+
         dct = {}
-        print(f"""Decoded dict: {t}""")
+        dct['Valid'] = 'true'
+
         if t['pathLengths']:
             dct['pathlength'] = sum(t['pathLengths']) / len(t['pathLengths'])
         else:
             dct['pathlength'] = 5000000.0
+            dct['Valid'] = "false"
+
         if t['computationTimes']:
             dct['computationtime'] = sum(t['computationTimes']) / len(t['computationTimes'])
         else:
             dct['computationtime'] = 5000000.0
+            dct['Valid'] = "false"
 
         dct['failures'] = float(t['failures'])
+
         print(f"returning dct: {dct}")
         asyncloop.call_soon_threadsafe(cb, future.set_result(dct))
     elif msg.topic.startswith('bmInitResponse'):
         if str(msg.payload.decode("utf-8")).startswith('Success'):
-            print("mqtt Client: success, returning 1")
+            print("mqtt client init response: success, returning 1")
             asyncloop.call_soon_threadsafe(cb, future.set_result(1))
         else:
             print("Benchmark init: received failure message. Discarding run.")

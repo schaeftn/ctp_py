@@ -5,7 +5,6 @@ import sys
 np.set_printoptions(threshold=sys.maxsize)
 np.set_printoptions(suppress=True)
 
-
 cy = pymesh.generate_cylinder(np.array([5.0, 5.0, 0.0]), np.array([5.0, 5.0, 3.0]), 5.0, 5.0, num_segments=36)
 cy2 = pymesh.generate_cylinder(np.array([95.0, 95.0, 0.0]), np.array([95.0, 95.0, 3.0]), 5.0, 5.0, num_segments=36)
 cy3 = pymesh.generate_cylinder(np.array([95.0, 5.0, 0.0]), np.array([95.0, 5.0, 3.0]), 5.0, 5.0, num_segments=36)
@@ -19,7 +18,6 @@ tree = pymesh.CSGTree({"union":
    })
 
 ch = pymesh.convex_hull(tree.mesh, engine='auto', with_timing=False)
-
 
 pymesh.save_mesh("/home/tristan/projects/ctp_py/resources/mesh_processing/00_cy.stl", cy)
 pymesh.save_mesh("/home/tristan/projects/ctp_py/resources/mesh_processing/00_tree.stl", tree.mesh)

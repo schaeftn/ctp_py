@@ -59,7 +59,7 @@ class Scene3D(Scene):
     def get_scene_size_pym(self):
         ar = self.scene_size
         return pymesh.generate_box_mesh(np.array([-ar[0]/2, -ar[1]/2, -ar[2]/2]),
-                                        np.array([ar[0]/2, ar[1]/2, ar[2]/2]), using_simplex=True)
+                                        np.array([ar[0]/2, ar[1]/2, ar[2]/2]))
 
     def transform_to_pymesh(self):
         output_mesh = self.get_scene_size_pym()
