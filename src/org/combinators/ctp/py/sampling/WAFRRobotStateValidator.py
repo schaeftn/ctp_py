@@ -74,9 +74,10 @@ class WAFRRobotStateValidator(ob.StateValidityChecker):
             return False
         if(not collision):       
             for id,clm in enumerate(self.clms):
-                req = fcl.CollisionRequest()
-                result = fcl.CollisionResult()
-                ret = fcl.collide(clm._objs[id]['obj'], self.env_clm._objs['env']['obj'], req, result)             
-                if result.is_collision:
-                    return False
+                if(id > 0):
+                    req = fcl.CollisionRequest()
+                    result = fcl.CollisionResult()
+                    ret = fcl.collide(clm._objs[id]['obj'], self.env_clm._objs['env']['obj'], req, result)             
+                    if result.is_collision:
+                        return False
         return True       
