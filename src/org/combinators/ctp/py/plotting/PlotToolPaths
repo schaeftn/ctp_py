@@ -1,0 +1,51 @@
+from os import walk
+from os.path import isfile, join
+import sys
+import itertools
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+import json
+from io import StringIO
+
+sys.path.append('/home/tristan/projects/ctp_py/src/org/combinators/ctp/py/plotting')
+
+currentpath = "/home/tristan/projects/ctp_py/src/org/combinators/ctp/py/plotting"
+
+scaleX = 20
+scaleY = 20
+
+
+def getXCoord(v, translate):
+    return int((v + translate) * scaleX)
+
+
+def getYCoord(v, translate):
+    return int((v + translate) * scaleY)
+
+
+def getV(point):
+    return point[3]
+
+
+for root, dirs, files in walk(currentpath):
+    onlyfiles = [root + "/" + f for f in files if isfile(join(root, f)) and f.endswith("tp.json")]
+
+    print(f"{onlyfiles}")
+
+    for f in [open(f) for f in onlyfiles]:
+        whiteblankimage = 255 * np.ones(shape=[int(scaleX * 150), int(scaleY * 150), 3], dtype=np.uint8)
+
+        data = f.read()
+        js = json.loads(data)
+        for p in js:
+            vmax = max(map(getV, p))
+            print(f"vmax: {vmax}")
+            for e in zip(p, itertools.islice(p, 1, None)):
+                print(f"pt1: {e[0][0]} , {e[0][1]}, {e[0][3]}")
+                c = (255 - int((e[1][3] / vmax) * 255),int((e[1][3] / vmax) * 255), 0)
+                cv2.line(whiteblankimage, pt1=(getXCoord(e[0][0], 50), getYCoord(e[0][1], 50)),
+                         pt2=(getXCoord(e[1][0], 50), getYCoord(e[1][1], 50)), color=c, thickness=5)
+
+        plt.imsave(f.name + ".png", whiteblankimage)

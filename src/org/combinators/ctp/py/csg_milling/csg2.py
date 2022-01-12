@@ -39,7 +39,7 @@ basic_mesh_2 = pymesh.CSGTree({"union":
 pymesh.save_mesh("/home/tristan/projects/ctp_py/resources/mesh_processing/02_basic_mesh.stl", basic_mesh.mesh)
 pymesh.save_mesh("/home/tristan/projects/ctp_py/resources/mesh_processing/02_basic_mesh_2.stl", basic_mesh_2.mesh)
 
-right_box = pymesh.generate_box_mesh(np.array([45.0, 30.0, 0.0]), np.array([65.0, 40.0, 3.0]))
+right_box = pymesh.generate_box_mesh(np.array([43.0, 30.0, 0.0]), np.array([65.0, 40.0, 3.0]))
 
 right_upper_z1 = pymesh.generate_cylinder(np.array([55.0, 41.0, 0.0]), np.array([55.0, 41.0, 3.0]), min_inner_area_edge_radius,min_inner_area_edge_radius, num_segments=36)
 right_upper_z2 = pymesh.generate_cylinder(np.array([66.0, 41.0, 0.0]), np.array([66.0, 41.0, 3.0]), min_inner_area_edge_radius,min_inner_area_edge_radius, num_segments=36)
@@ -81,59 +81,56 @@ right_csg = pymesh.CSGTree({"union":
         right_lower_csg]
    })
 
-isle_box = pymesh.generate_box_mesh(np.array([10.0, 22.0, 0.0]), np.array([25.0, 37.0, 3.0]))
-isle_z_upper_right = pymesh.generate_cylinder(np.array([25.0, 29.0, 0.0]), np.array([25.0, 29.0, 3.0]), 7.0,7.0, num_segments=36)
-isle_z_lower_right = pymesh.generate_cylinder(np.array([32.0, 23.0, 0.0]), np.array([32.0, 23.0, 3.0]), 1.0, 1.0,
-                                              num_segments=12)
-isle_csg = pymesh.CSGTree({"union":
-       [
-        pymesh.CSGTree({"mesh": isle_box}),
-        pymesh.CSGTree({"mesh": isle_z_upper_right}),
-        pymesh.CSGTree({"mesh": isle_z_lower_right})]
-   })
-
-isle_hull = pymesh.convex_hull(isle_csg.mesh, engine='auto', with_timing=False)
-
-
-
-isle_inner_upper_left = pymesh.generate_cylinder(np.array([17.0, 30.0, 0.0]), np.array([17.0, 30.0, 3.0]),
-                                                 5.0, 5.0, num_segments=24)
-
-isle_inner_upper_right = pymesh.generate_cylinder(np.array([25.0, 29.0, 0.0]), np.array([25.0, 29.0, 3.0]),
-                                                  5.0,5.0, num_segments=24)
-
-isle_inner_upper_middle = pymesh.generate_cylinder(np.array([23.0, 25.0, 0.0]), np.array([23.0, 25.0, 3.0]),
-                                                 4.0, 4.0, num_segments=24)
-
-isle_inner_csg = pymesh.CSGTree({"union":
-       [pymesh.CSGTree({"mesh": isle_inner_upper_left}),
-        pymesh.CSGTree({"mesh": isle_inner_upper_right}),
-        pymesh.CSGTree({"mesh": isle_inner_upper_middle})
-        ]})
-
-isle_inner_ch = pymesh.convex_hull(isle_inner_csg.mesh, engine='auto', with_timing=False)
-
-isle_csg = pymesh.CSGTree({"difference":
-       [pymesh.CSGTree({"mesh": isle_hull}),
-        pymesh.CSGTree({"mesh": isle_inner_ch})]
-   })
-
-basic_mesh_2a = pymesh.CSGTree({"union":
-       [basic_mesh_2,
-        isle_csg]
-   })
+# isle_box = pymesh.generate_box_mesh(np.array([15.0, 28.0, 0.0]), np.array([25.0, 35.0, 3.0]))
+# isle_z_upper_right = pymesh.generate_cylinder(np.array([25.0, 28.0, 0.0]), np.array([25.0, 28.0, 3.0]), 5.0,5.0, num_segments=36)
+# isle_z_lower_right = pymesh.generate_cylinder(np.array([31.0, 29.0, 0.0]), np.array([31.0, 29.0, 3.0]), 1.0, 1.0,
+#                                               num_segments=12)
+# isle_csg = pymesh.CSGTree({"union":
+#        [
+#         pymesh.CSGTree({"mesh": isle_box}),
+#         pymesh.CSGTree({"mesh": isle_z_upper_right})]
+#    })
+#
+# isle_hull = pymesh.convex_hull(isle_csg.mesh, engine='auto', with_timing=False)
+#
+# isle_inner_upper_left = pymesh.generate_cylinder(np.array([22.0, 28.0, 0.0]), np.array([22.0, 28.0, 3.0]),
+#                                                  4.5, 4.5, num_segments=24)
+#
+# isle_inner_upper_right = pymesh.generate_cylinder(np.array([25.0, 28.0, 0.0]), np.array([25.0, 28.0, 3.0]),
+#                                                   4.0,4.0, num_segments=24)
+#
+# isle_inner_upper_middle = pymesh.generate_cylinder(np.array([23.0, 20.0, 0.0]), np.array([23.0, 20.0, 3.0]),
+#                                                  4.0, 4.0, num_segments=24)
+#
+# isle_inner_csg = pymesh.CSGTree({"union":
+#        [pymesh.CSGTree({"mesh": isle_inner_upper_left}),
+#         pymesh.CSGTree({"mesh": isle_inner_upper_right}),
+#         pymesh.CSGTree({"mesh": isle_inner_upper_middle})
+#         ]})
+#
+# isle_inner_ch = pymesh.convex_hull(isle_inner_csg.mesh, engine='auto', with_timing=False)
+#
+# isle_csg = pymesh.CSGTree({"difference":
+#        [pymesh.CSGTree({"mesh": isle_hull}),
+#         pymesh.CSGTree({"mesh": isle_inner_ch})]
+#    })
+#
+# basic_mesh_2a = pymesh.CSGTree({"union":
+#        [basic_mesh_2,
+#         isle_csg]
+#    })
 
 basic_mesh_3 = pymesh.CSGTree({"difference":
-       [basic_mesh_2a,
+       [basic_mesh_2,
         pymesh.CSGTree({"mesh": right_csg})]
    })
 
 pymesh.save_mesh("/home/tristan/projects/ctp_py/resources/mesh_processing/02_basic_mesh_3.stl", basic_mesh_3.mesh)
 
 print("""{ "vertices" : """)
-print(f"""{np.array2string(basic_mesh_2.mesh.vertices, precision=6, separator=", ", floatmode="fixed")},""")
+print(f"""{np.array2string(basic_mesh_3.mesh.vertices, precision=6, separator=", ", floatmode="fixed")},""")
 print(""" "obstacles" : """)
-print(f"""{np.array2string(basic_mesh_2.mesh.faces, separator=", ")},""")
+print(f"""{np.array2string(basic_mesh_3.mesh.faces, separator=", ")},""")
 print(""" "boundaries" : """)
 print(f"""[]}}""")
 

@@ -3,6 +3,8 @@ from abc import ABC
 from sympy.geometry import Point, Polygon, convex_hull
 import pymesh
 import scipy.spatial.qhull as qhull
+import trimesh
+import pyvista
 
 class SceneObject(ABC):
     @property
@@ -62,6 +64,8 @@ class SceneObject3D(SceneObject):
         a = np.ones((np.size(self.vertices, 0), 1))
         self.vertices = np.hsplit(np.array([np.matmul(t, x) for x in np.hstack((self.vertices, a))]), [3, 1])[0]
 
+    def toPyvista(self):
+        return pyvista.PolyData(self.vertices, faces=self.triangles)
 
 stdV = np.array([[-0.5, -0.5, -0.5],
                  [0.5, -0.5, -0.5],
