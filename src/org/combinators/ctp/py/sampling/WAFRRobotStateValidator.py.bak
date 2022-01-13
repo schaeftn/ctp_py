@@ -46,7 +46,7 @@ class WAFRRobotStateValidator(ob.StateValidityChecker):
     def setJointConfiguration(self,jointConfig):
         if len(jointConfig) <= len(self.tm._joints):
             for i,j in enumerate(jointConfig):
-                self.tm.set_joint("joint_{}".format(i), j)
+                self.tm.set_joint("joint_{}".format(i), j * np.pi)
             self.tfs = []
             for i,frame in enumerate(self.tfts):
                 tf = self.tm.get_transform(frame,"0_link")
