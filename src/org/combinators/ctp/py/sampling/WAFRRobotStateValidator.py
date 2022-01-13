@@ -19,49 +19,49 @@ except ImportError:
     import sys
 
 
-
-class WAFRRobotStateValidator(ob.StateValidityChecker):
-    def __init__(self,package,environment):
+class WafrRobotStateValidator:
+    def __init__(self, package, environment):
         self.tm = urdf.UrdfTransformManager()
         self.meshes = []
         self.clms = []
         with open(package + "/urdf/URDF.urdf", "r") as f:
-            self.tm.load_urdf(f.read())       
-        for i,meshname in enumerate(list(filter(lambda x: x[0].isdigit(), self.tm.nodes))):
+            self.tm.load_urdf(f.read())
+        for i, meshname in enumerate(list(filter(lambda x: x[0].isdigit(), self.tm.nodes))):
             tmesh = trimesh.load_mesh((package + "/meshes/{}.stl".format(meshname)))
             clm = CollisionManager()
-            clm.add_object(i,tmesh)
+            clm.add_object(i, tmesh)
             self.clms.append(clm)
-            self.meshes.append(tmesh)  
+            self.meshes.append(tmesh)
         self.env_clm = CollisionManager()
-        self.env_clm.add_object('env',trimesh.load_mesh(environment))
+        self.env_clm.add_object('env', trimesh.load_mesh(environment))
         self.tfts = list(filter(lambda x: x[0].isdigit(), self.tm.nodes))
-        
+
     def getSamplingSpace(self):
         space = ob.RealVectorStateSpace()
         for joint in self.tm._joints:
-           space.addDimension(self.tm.get_joint_limits(joint)[0],self.tm.get_joint_limits(joint)[1])
+            space.addDimension(self.tm.get_joint_limits(joint)[0], self.tm.get_joint_limits(joint)[1])
         return space
-        
-    def setJointConfiguration(self,jointConfig):
-        if len(jointConfig) <= len(self.tm._joints):
-            for i,j in enumerate(jointConfig):
+
+    def setJointConfiguration(self, jointConfig, dimensions):
+        if dimensions <= len(self.tm._joints):
+            for i, j in enumerate(jointConfig):
                 self.tm.set_joint("joint_{}".format(i), j)
             self.tfs = []
-            for i,frame in enumerate(self.tfts):
-                tf = self.tm.get_transform(frame,"0_link")
+            for i, frame in enumerate(self.tfts):
+                tf = self.tm.get_transform(frame, "0_link")
                 self.tfs.append(tf)
             for tf in self.tfs:
-                tf[0:3,3] *= 1000          
+                tf[0:3, 3] *= 1000
         else:
             print("Dim of jointConfig is higher than Dim of robot")
-           
-        
+
     def isValid(self, *args, **kwargs):
-        ompl_state = args[0]
-        self.setJointConfiguration(ompl_state.values)
+        wafr_si = args[0]  # ompl space information, partial func
+        ompl_state = args[1]
+        print(ompl_state)
+        self.setJointConfiguration(ompl_state, wafr_si.getStateDimension())
         
-        for i,m in enumerate(self.meshes): 
+        for i,m in enumerate(self.meshes):
             self.clms[i].set_transform(i,self.tfs[i])
         collision = False
         #This is 7 times faster than whatever the wrapper implemented like this
@@ -77,7 +77,7 @@ class WAFRRobotStateValidator(ob.StateValidityChecker):
                 if(id > 0):
                     req = fcl.CollisionRequest()
                     result = fcl.CollisionResult()
-                    ret = fcl.collide(clm._objs[id]['obj'], self.env_clm._objs['env']['obj'], req, result)             
+                    ret = fcl.collide(clm._objs[id]['obj'], self.env_clm._objs['env']['obj'], req, result)
                     if result.is_collision:
                         return False
         return True       
