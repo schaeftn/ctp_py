@@ -6,6 +6,7 @@ from org.combinators.ctp.py.sampling.WAFRRobotStateValidator import *
 from org.combinators.ctp.py.sampling.FclMotionValidator import *
 from org.combinators.ctp.py.sampling.FclStateValidator import *
 from org.combinators.ctp.py.sampling.PathRefinement import *
+from functools import partial
 
 from enum import Enum
 import asyncio
@@ -30,6 +31,7 @@ class plan:
     def __init__(self, planning_time=10.0, simplification_time=2.0):
         self.planning_time = planning_time
         self.simplification_time = simplification_time
+        $sbmp_main.stateValidatorArgs$
         $sbmp_main.space_def$
 
         # set the bounds
@@ -40,7 +42,6 @@ $sbmp_main.startstop$
         $sbmp_main.spaceSampler$
         self.si = ob.SpaceInformation(space)
         $sbmp_main.motionValidator$
-        $sbmp_main.stateValidatorArgs$
         $sbmp_main.stateValidator$
         $sbmp_main.stateValidatorResolution$
         $sbmp_main.validStateSamplerAlloc$
@@ -68,19 +69,7 @@ $sbmp_main.cost$
         data = ob.PlannerData(self.si)
         self.ss.getPlannerData(data)
 
-        explored_states = []
-        for i in range(0, data.numVertices()):
-            coords = []
-            state = data.getVertex(i).getState()
-
-            coords.append(state.getX())
-            coords.append(state.getY())
-            coords.append(state.getZ())
-            explored_states.insert(i, coords)
-        explored_states = []
         print(f"solution path:")
-
-        print(f"""{{"exploredStates" : {explored_states}}}""")
 
         if self.ss.haveSolutionPath():
             print(f"solution path: {self.ss.getSolutionPath()}")
