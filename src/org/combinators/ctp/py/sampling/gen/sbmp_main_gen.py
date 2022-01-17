@@ -66,63 +66,36 @@ class plan:
     def __init__(self, planning_time=10.0, simplification_time=2.0):
         self.planning_time = planning_time
         self.simplification_time = simplification_time
-        env = "/home/tristan/projects/ctp_py/resources/Robots/RobotEnvironments/env3.stl"
+        env = "/home/tristan/projects/ctp_py/resources/Robots/RobotEnvironments/env1.stl"
         package = "/home/tristan/projects/ctp_py/resources/Robots/RobotDescriptions/clsrobo_44550_description"
         wafr_validator = WafrRobotStateValidator(package, env)
         space = wafr_validator.getSamplingSpace()
 
-        # set the bounds
-        
-
-        class Samplers(Enum):
-            OBSTACLEBASED = 1
-            UNIFORM = 2
-            GAUSSIAN = 3
-            MAXCLEARANCE = 4
-            CUSTOM = 5
-
-        def getSampler(si):
-            samplerId = Samplers.UNIFORM
-            switcher = {
-                Samplers.OBSTACLEBASED: ob.ObstacleBasedValidStateSampler(si),
-                Samplers.UNIFORM: ob.UniformValidStateSampler(si),
-                Samplers.GAUSSIAN: ob.GaussianValidStateSampler(si),
-                Samplers.MAXCLEARANCE: ob.MaximizeClearanceValidStateSampler(si),
-                Samplers.CUSTOM: PathRefinementSampler(si)
-            }
-            return switcher.get(samplerId)
-
-        def getStateSpaceSampler(sp):
-            print(f"getSampler")
-            samplerId = Samplers.UNIFORM
-            switcher = {
-                Samplers.UNIFORM: ob.CompoundStateSampler(sp),
-                Samplers.GAUSSIAN: ob.CompoundStateSampler(sp),
-                Samplers.CUSTOM: PathRefinementSpSampler(sp)
-            }
-            print(f"returning: {switcher.get(samplerId)}")
-            return switcher.get(samplerId)
-
-        # create a start state
+        start_list = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         start = ob.State(space)
-        startRef = start()
-        startRef.values = [0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+        for index, value in enumerate(start_list):
+            start[index] = value
 
-        # create a goal state
+        space.enforceBounds(start())
+
+        goal_list = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
         goal = ob.State(space)
-        goalRef = goal()
-        goalRef.values = [2.57,0.0,1.57,1.57,0.8,-0.62,0.0]
-        
+        for index, value in enumerate(goal_list):
+            goal[index] = value
 
-        #space.setStateSamplerAllocator(ob.StateSamplerAllocator(getStateSpaceSampler))
-        space.setStateSamplerAllocator(ob.StateSamplerAllocator(getStateSpaceSampler))
+        space.enforceBounds(goal())
+
+        # space.setStateSamplerAllocator(ob.StateSamplerAllocator(ob.RealVectorStateSampler))
+
         self.si = ob.SpaceInformation(space)
-        #self.si.setMotionValidator(ob.DiscreteMotionValidator(self.si))
-        self.si.setMotionValidator(FclMotionValidator(self.si))
-                # State Validator Arguments
+
+        self.si.setValidStateSamplerAllocator(ob.ValidStateSamplerAllocator(ob.UniformValidStateSampler))
+
+        self.si.setMotionValidator(ob.DiscreteMotionValidator(self.si))
+        #self.si.setMotionValidator(FclMotionValidator(self.si))
 
         self.si.setStateValidityChecker(ob.StateValidityCheckerFn(partial(wafr_validator.isValid, self.si)))
-        self.si.setStateValidityCheckingResolution(0.01)
+        #self.si.setStateValidityCheckingResolution(0.01)
 
         self.ss = og.SimpleSetup(self.si)
         p = og.PRMstar(self.si)
@@ -132,9 +105,7 @@ class plan:
         self.ss.getPlanner().checkValidity()
 
         self.solve()
-        np.set_printoptions(formatter={'float':'{:0.5f}'.format})
-        #print(f"solution path:")
-        #[print(f"RealVectorState {v}") for v in path_data.path_list]
+        np.set_printoptions(formatter={'float': '{:0.5f}'.format})
 
     def solve(self):
         solved = self.ss.solve(self.planning_time)
@@ -147,15 +118,6 @@ class plan:
         data = ob.PlannerData(self.si)
         self.ss.getPlannerData(data)
 
-        explored_states = []
-        for i in range(0, data.numVertices()):
-            coords = []
-            state = data.getVertex(i).getState()
-
-            coords.append(state.getX())
-            coords.append(state.getY())
-            coords.append(state.getZ())
-            explored_states.insert(i, coords)
         explored_states = []
         print(f"solution path:")
 
