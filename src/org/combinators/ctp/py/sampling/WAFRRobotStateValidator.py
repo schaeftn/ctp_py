@@ -1,3 +1,5 @@
+from collections import Iterable
+
 import numpy as np
 import stl
 from stl import mesh
@@ -39,11 +41,12 @@ class WafrRobotStateValidator:
     def getSamplingSpace(self):
         space = ob.RealVectorStateSpace()
         for joint in self.tm._joints:
+            print(self.tm.get_joint_limits(joint)[0], self.tm.get_joint_limits(joint)[1])
             space.addDimension(self.tm.get_joint_limits(joint)[0], self.tm.get_joint_limits(joint)[1])
         return space
 
-    def setJointConfiguration(self, jointConfig, dimensions):
-        if dimensions <= len(self.tm._joints):
+    def setJointConfiguration(self, jointConfig, num_dimensions):
+        if num_dimensions <= len(self.tm._joints):
             for i, j in enumerate(jointConfig):
                 self.tm.set_joint("joint_{}".format(i), j)
             self.tfs = []
@@ -56,13 +59,15 @@ class WafrRobotStateValidator:
             print("Dim of jointConfig is higher than Dim of robot")
 
     def isValid(self, *args, **kwargs):
-        wafr_si = args[0]  # ompl space information, partial func
+        wafr_si = args[0]  # ompl space information
         ompl_state = args[1]
-        print(ompl_state)
-        self.setJointConfiguration(ompl_state, wafr_si.getStateDimension())
-        
-        for i,m in enumerate(self.meshes):
-            self.clms[i].set_transform(i,self.tfs[i])
+
+        state_array = [ompl_state[i] for i in range(len(self.tm._joints))]
+
+        self.setJointConfiguration(state_array, wafr_si.getStateSpace().getDimension())
+
+        for i, m in enumerate(self.meshes):
+            self.clms[i].set_transform(i, self.tfs[i])
         collision = False
         #This is 7 times faster than whatever the wrapper implemented like this
         for i in range(len(self.meshes)-2):
