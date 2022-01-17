@@ -1,0 +1,303 @@
+<?xml version="1.0" ?>
+<robot name="clsrobo_10722" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <material name="silver">
+        <color rgba="0.8 0.8 0.8 1.000"/>
+    </material>
+
+    <!-->Link Tags Go Here<-->
+    
+<link name="0_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.00003821186809 -0.00030983086283 0.01875604321375"/>
+            <mass value="2.07110000000000"/>
+            <inertia ixx="3.64188928305714" ixy="0.00000514769757" ixz="0.00000085409818" iyy="3.64187376134656" iyz="0.00000286492593" izz="0.01059796903767"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_10722_description/meshes/0_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_10722_description/meshes/0_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+<link name="1_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.00012843477802 -0.00014275664176 0.02077775078681"/>
+            <mass value="0.22750000000000"/>
+            <inertia ixx="0.00019717203900" ixy="-0.00000059205455" ixz="0.00000047245861" iyy="0.00024035701003" iyz="-0.00000052463206" izz="0.00022140776924"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_10722_description/meshes/1_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_10722_description/meshes/1_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+<link name="2_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.00000021195334 -0.00000074183667 0.04384420348224"/>
+            <mass value="0.06823200000000"/>
+            <inertia ixx="0.00001806916408" ixy="0.00000000789709" ixz="-0.00000033206490" iyy="0.00003101316379" iyz="-0.00000001026684" izz="0.00002108400034"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_10722_description/meshes/2_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_10722_description/meshes/2_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+<link name="3_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.00000000000000 0.00000000000000 0.02842285202155"/>
+            <mass value="0.06198200000000"/>
+            <inertia ixx="0.00001781079875" ixy="0.00000000881800" ixz="-0.00000006923300" iyy="0.00002019079875" iyz="-0.00000000773100" izz="0.00001068200000"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_10722_description/meshes/3_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_10722_description/meshes/3_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+<link name="4_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.00000000000000 -0.00000036551898 0.05006304085747"/>
+            <mass value="0.07141900000000"/>
+            <inertia ixx="0.00002510727914" ixy="0.00000000881800" ixz="-0.00000006923300" iyy="0.00002904527902" iyz="-0.00000000853299" izz="0.00001210800012"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_10722_description/meshes/4_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_10722_description/meshes/4_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+<link name="5_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.00000000000000 0.00000000000000 0.01800000000000"/>
+            <mass value="0.00716000000000"/>
+            <inertia ixx="0.00000123800000" ixy="-0.00000000020200" ixz="-0.00000000016500" iyy="0.00000283900000" iyz="0.00000012121400" izz="0.00000187100000"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_10722_description/meshes/5_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_10722_description/meshes/5_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <!-->Joint Tags Go Here<-->
+    
+<joint name="joint_0" type="revolute">
+        <origin rpy="0 0 0" xyz="0.00000000000000 0.00000000000000 0.04100000000000"/>
+        <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="1.0"/>
+        <parent link="0_link"/>
+        <child link="1_link"/>
+        <axis xyz="0.00000000000000 0.00000000000000 1.00000000000000"/>
+</joint>
+
+
+<joint name="joint_1" type="revolute">
+        <origin rpy="0 0 0" xyz="0.00000000000000 0.00000000000000 0.05098200000000"/>
+        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="1.0"/>
+        <parent link="1_link"/>
+        <child link="2_link"/>
+        <axis xyz="1.00000000000000 0.00000000000000 0.00000000000000"/>
+</joint>
+
+
+<joint name="joint_2" type="revolute">
+        <origin rpy="0 0 0" xyz="0.01200000000000 0.00000000000000 0.06650000000000"/>
+        <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="1.0"/>
+        <parent link="2_link"/>
+        <child link="3_link"/>
+        <axis xyz="0.00000000000000 0.00000000000000 1.00000000000000"/>
+</joint>
+
+
+<joint name="joint_3" type="revolute">
+        <origin rpy="0 0 0" xyz="-0.00000000000000 0.00000000000000 0.04175000000000"/>
+        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="1.0"/>
+        <parent link="3_link"/>
+        <child link="4_link"/>
+        <axis xyz="-1.00000000000000 0.00000000000000 0.00000000000000"/>
+</joint>
+
+
+<joint name="joint_4" type="revolute">
+        <origin rpy="0 0 0" xyz="-0.00000000000000 0.00000000000000 0.06575000000000"/>
+        <limit effort="1000.0" lower="-1.57" upper="0" velocity="1.0"/>
+        <parent link="4_link"/>
+        <child link="5_link"/>
+        <axis xyz="-1.00000000000000 0.00000000000000 0.00000000000000"/>
+</joint>
+
+
+
+    <!--Transmissions go here -->
+    
+<transmission name="joint_0_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="joint_0">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="joint_0_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+
+<transmission name="joint_1_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="joint_1">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="joint_1_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+
+<transmission name="joint_2_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="joint_2">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="joint_2_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+
+<transmission name="joint_3_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="joint_3">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="joint_3_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+
+<transmission name="joint_4_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="joint_4">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="joint_4_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+
+
+
+<gazebo>
+    <plugin filename="libgazebo_ros_control.so" name="control"/>
+</gazebo>
+
+<gazebo reference="0_link">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+    <gravity>true</gravity>
+</gazebo>
+
+    
+<gazebo reference="1_link">
+        <material>Gazebo/Green</material>
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <selfCollide>true</selfCollide>
+</gazebo>
+
+
+<gazebo reference="2_link">
+        <material>Gazebo/Green</material>
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <selfCollide>true</selfCollide>
+</gazebo>
+
+
+<gazebo reference="3_link">
+        <material>Gazebo/Green</material>
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <selfCollide>true</selfCollide>
+</gazebo>
+
+
+<gazebo reference="4_link">
+        <material>Gazebo/Green</material>
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <selfCollide>true</selfCollide>
+</gazebo>
+
+
+<gazebo reference="5_link">
+        <material>Gazebo/Green</material>
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <selfCollide>true</selfCollide>
+</gazebo>
+
+
+
+</robot>
