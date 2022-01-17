@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>clsrobo_10722_description</name>
+    <version>0.0.0</version>
+    <description>URDF clsrobo_10722_description package</description>
+
+    <maintainer email="constantin.chaumet@tu-dortmund.de">Constantin Chaumet</maintainer>
+    <license>Apache</license>
+
+    <!-- <url type="website">http://wiki.ros.org/fusion2urdf</url> -->
+    <author email="constantin.chaumet@tu-dortmund.de">Constantin Chaumet</author>
+
+
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <build_depend>rospy</build_depend>
+    <build_export_depend>rospy</build_export_depend>
+    <exec_depend>rospy</exec_depend>
+
+    <export>
+    </export>
+</package>
