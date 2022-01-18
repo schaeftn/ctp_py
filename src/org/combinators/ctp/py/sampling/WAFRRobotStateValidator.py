@@ -5,6 +5,7 @@ import stl
 from stl import mesh
 import trimesh
 import fcl
+import logging
 from pytransform3d import urdf
 from pytransform3d.transformations import transform
 from timeit import default_timer as timer
@@ -23,6 +24,7 @@ except ImportError:
 
 class WafrRobotStateValidator:
     def __init__(self, package, environment):
+        logging.getLogger('trimesh').setLevel(logging.CRITICAL + 1)
         self.tm = urdf.UrdfTransformManager()
         self.meshes = []
         self.clms = []
