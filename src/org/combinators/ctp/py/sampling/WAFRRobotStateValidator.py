@@ -41,7 +41,7 @@ class WafrRobotStateValidator:
     def getSamplingSpace(self):
         space = ob.RealVectorStateSpace()
         for joint in self.tm._joints:
-            print(self.tm.get_joint_limits(joint)[0], self.tm.get_joint_limits(joint)[1])
+            # print(self.tm.get_joint_limits(joint)[0], self.tm.get_joint_limits(joint)[1])
             space.addDimension(self.tm.get_joint_limits(joint)[0], self.tm.get_joint_limits(joint)[1])
         return space
 
