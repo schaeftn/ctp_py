@@ -1,0 +1,245 @@
+<?xml version="1.0" ?>
+<robot name="clsrobo_90457" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="$(find clsrobo_90457_description)/urdf/materials.xacro" />
+    <xacro:include filename="$(find clsrobo_90457_description)/urdf/URDF.trans" />
+    <xacro:include filename="$(find clsrobo_90457_description)/urdf/URDF.gazebo" />
+
+    <!-->Link Tags Go Here<-->
+    
+<link name="0_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.00003821186809 -0.00030983086283 0.01875604321375"/>
+            <mass value="2.07110000000000"/>
+            <inertia ixx="3.64188928305714" ixy="0.00000514769757" ixz="0.00000085409818" iyy="3.64187376134656" iyz="0.00000286492593" izz="0.01059796903767"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/0_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/0_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+<link name="1_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.00012843477802 -0.00014275664176 0.02077775078681"/>
+            <mass value="0.22750000000000"/>
+            <inertia ixx="0.00019717203900" ixy="-0.00000059205455" ixz="0.00000047245861" iyy="0.00024035701003" iyz="-0.00000052463206" izz="0.00022140776924"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/1_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/1_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+<link name="2_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.00000000000000 0.00000000000000 0.04327280106237"/>
+            <mass value="0.07003200000000"/>
+            <inertia ixx="0.00001922677189" ixy="0.00000000789700" ixz="0.00000033247000" iyy="0.00003200377189" iyz="0.00000000906400" izz="0.00002148900000"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/2_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/2_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+<link name="3_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.00000000000000 0.00000000000000 0.02842285202155"/>
+            <mass value="0.06198200000000"/>
+            <inertia ixx="0.00001781079875" ixy="0.00000000881800" ixz="-0.00000006923300" iyy="0.00002019079875" iyz="-0.00000000773100" izz="0.00001068200000"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/3_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/3_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+<link name="4_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.00000000000000 0.00000000000000 0.07204928207526"/>
+            <mass value="0.09625800000000"/>
+            <inertia ixx="0.00009398436500" ixy="0.00000000881800" ixz="-0.00000006923300" iyy="0.00009756736500" iyz="-0.00000000773100" izz="0.00001666400000"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/4_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/4_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+<link name="5_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.00000000000000 0.00000000000000 0.04389676587057"/>
+            <mass value="0.06808200000000"/>
+            <inertia ixx="0.00001823124550" ixy="0.00000000789700" ixz="0.00000033247000" iyy="0.00002650824550" iyz="0.00000000906400" izz="0.00001691500000"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/5_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/5_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+<link name="6_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.00000000000000 0.00000000000000 0.02858005449096"/>
+            <mass value="0.06705700000000"/>
+            <inertia ixx="0.00001783103790" ixy="0.00000000881800" ixz="-0.00000006923300" iyy="0.00002021103790" iyz="-0.00000000773100" izz="0.00001068200000"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/6_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/6_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+<link name="7_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.00000000000000 0.00000000000000 0.01800000000000"/>
+            <mass value="0.00716000000000"/>
+            <inertia ixx="0.00000123800000" ixy="-0.00000000020200" ixz="-0.00000000016500" iyy="0.00000283900000" iyz="0.00000012121400" izz="0.00000187100000"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/7_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://clsrobo_90457_description/meshes/7_link.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <!-->Joint Tags Go Here<-->
+    
+<joint name="joint_0" type="revolute">
+        <origin rpy="0 0 0" xyz="0.00000000000000 0.00000000000000 0.04100000000000"/>
+        <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="1.0"/>
+        <parent link="0_link"/>
+        <child link="1_link"/>
+        <axis xyz="0.00000000000000 0.00000000000000 1.00000000000000"/>
+</joint>
+
+
+<joint name="joint_1" type="revolute">
+        <origin rpy="0 0 0" xyz="0.00000000000000 0.00000000000000 0.05098200000000"/>
+        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="1.0"/>
+        <parent link="1_link"/>
+        <child link="2_link"/>
+        <axis xyz="1.00000000000000 0.00000000000000 0.00000000000000"/>
+</joint>
+
+
+<joint name="joint_2" type="revolute">
+        <origin rpy="0 0 0" xyz="-0.00000000000000 -0.01200000000000 0.06650000000000"/>
+        <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="1.0"/>
+        <parent link="2_link"/>
+        <child link="3_link"/>
+        <axis xyz="0.00000000000000 0.00000000000000 1.00000000000000"/>
+</joint>
+
+
+<joint name="joint_3" type="revolute">
+        <origin rpy="0 0 0" xyz="0.00000000000000 0.00000000000000 0.04175000000000"/>
+        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="1.0"/>
+        <parent link="3_link"/>
+        <child link="4_link"/>
+        <axis xyz="0.00000000000000 1.00000000000000 0.00000000000000"/>
+</joint>
+
+
+<joint name="joint_4" type="revolute">
+        <origin rpy="0 0 0" xyz="0.00000000000000 0.00000000000000 0.10475000000000"/>
+        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="1.0"/>
+        <parent link="4_link"/>
+        <child link="5_link"/>
+        <axis xyz="0.00000000000000 1.00000000000000 0.00000000000000"/>
+</joint>
+
+
+<joint name="joint_5" type="revolute">
+        <origin rpy="0 0 0" xyz="0.01200000000000 -0.00000000000000 0.06650000000000"/>
+        <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="1.0"/>
+        <parent link="5_link"/>
+        <child link="6_link"/>
+        <axis xyz="0.00000000000000 0.00000000000000 1.00000000000000"/>
+</joint>
+
+
+<joint name="joint_6" type="revolute">
+        <origin rpy="0 0 0" xyz="-0.00000000000000 0.00000000000000 0.04175000000000"/>
+        <limit effort="1000.0" lower="-1.57" upper="0" velocity="1.0"/>
+        <parent link="6_link"/>
+        <child link="7_link"/>
+        <axis xyz="-1.00000000000000 0.00000000000000 0.00000000000000"/>
+</joint>
+
+
+
+</robot>
