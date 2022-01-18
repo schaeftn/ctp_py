@@ -34,7 +34,7 @@ def get_new_mavg_file_name(fn, plot_mode=0):
         return os.path.join(p_out_folder, plot_folders[plot_mode], max_config_name, file_base_name + ".html")
     else:
         print(f"Problem finding new filename for fn: {fn}, config_name (len should be ex 1): {config_name}")
-        return os.path.join(os.path.dirname(fn), "test1.html")
+        return f"{fn}.html"
 
 
 def get_new_multi_mavg_file_name(config, plot_mode=0):
@@ -49,7 +49,7 @@ def get_new_pareto_plot_file_name(fn):
         return os.path.join(pp_out_folder, max_config_name, file_base_name + ".html")
     else:
         print(f"Problem finding new filename for fn: {fn}, config_name (len should be ex 1): {config_name}")
-        return os.path.join(os.path.dirname(fn), "test1.html")
+        return f"{fn}.html"
 
 
 def get_data_files():
