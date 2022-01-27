@@ -43,8 +43,8 @@ class WafrRobotStateValidator:
     def getSamplingSpace(self):
         space = ob.RealVectorStateSpace()
         for joint in self.tm._joints:
-            # print(self.tm.get_joint_limits(joint)[0], self.tm.get_joint_limits(joint)[1])
             space.addDimension(self.tm.get_joint_limits(joint)[0], self.tm.get_joint_limits(joint)[1])
+        space.setup()
         return space
 
     def setJointConfiguration(self, jointConfig, num_dimensions):
@@ -60,13 +60,10 @@ class WafrRobotStateValidator:
         else:
             print("Dim of jointConfig is higher than Dim of robot")
 
-    def isValid(self, *args, **kwargs):
-        wafr_si = args[0]  # ompl space information
-        ompl_state = args[1]
+    def isValid(self, wafr_si, ompl_state):
+        state = [ompl_state[i] for i in range(len(self.tm._joints))]
 
-        state_array = [ompl_state[i] for i in range(len(self.tm._joints))]
-
-        self.setJointConfiguration(state_array, wafr_si.getStateSpace().getDimension())
+        self.setJointConfiguration(state, wafr_si.getStateSpace().getDimension())
 
         for i, m in enumerate(self.meshes):
             self.clms[i].set_transform(i, self.tfs[i])

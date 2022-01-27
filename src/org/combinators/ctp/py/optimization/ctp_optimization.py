@@ -3,14 +3,12 @@ import asyncio
 import concurrent
 import sys
 from functools import partial, partialmethod
+from hypermapper import optimizer
 
-sys.path.append('scripts')
-sys.path.append('/home/tristan/projects/hypermapper/scripts')
 sys.path.append('/home/tristan/projects/ctp_py/src')
 
 from org.combinators.ctp.py.optimization import mqttClient
 
-import hypermapper
 import uuid
 import paho.mqtt.client as mqtt
 
@@ -32,6 +30,9 @@ planner_string_list = ["sbmp_planner_PRM", "sbmp_planner_PRMStar", "sbmp_planner
                        "sbmp_planner_STRIDE", "sbmp_planner_PDST", "sbmp_planner_FMT", "sbmp_planner_BFMT",
                        "sbmp_planner_RRTsharp", "sbmp_planner_RRTXstatic", "sbmp_planner_InformedRRTstar",
                        "sbmp_planner_BITstar"]
+
+
+
 sampler_string_list = ["sbmp_uniform_valid_state_sampler", "sbmp_obstacle_valid_state_sampler",
                        "sbmp_gaussian_valid_state_sampler", "sbmp_max_clearance_valid_state_sampler",
                        "sbmp_uniform_space_sampler", "sbmp_gaussian_space_sampler"]
@@ -219,6 +220,6 @@ if __name__ == "__main__":
                       state_validator=state_validator_string_list[1]) if 'wafr' in main_problem_instance else partial(
         ctp_function, problem_instance=main_problem_instance)
     parameters_file = f"/home/tristan/projects/ctp_py/src/org/combinators/ctp/py/optimization/ctp_scenario_{main_problem_instance}.json"
-    hypermapper.optimize(parameters_file, ctp_fun)
+    optimizer.optimize(parameters_file, ctp_fun)
 
     print("End of ctp optimization.")

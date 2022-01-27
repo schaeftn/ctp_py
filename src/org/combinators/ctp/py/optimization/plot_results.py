@@ -30,7 +30,7 @@ for root, dirs, files in walk(mypath):
 
         if os.path.isfile(new_file_name + ".html") and not overwrite_out_files:
             print(f"Skipping file, {new_file_name}.html already exists.")
-            break
+            continue
 
         new_data_frame = data_frame[~(data_frame.pathlength > 50000.0) | ~(data_frame.computationtime > 50000.0)]
 
