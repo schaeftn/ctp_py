@@ -1,9 +1,11 @@
 #!/usr/bin/python
 import asyncio
 import concurrent
+import shutil
 import sys
 from functools import partial, partialmethod
 from hypermapper import optimizer
+from datetime import datetime
 
 sys.path.append('/home/tristan/projects/ctp_py/src')
 
@@ -14,7 +16,11 @@ import paho.mqtt.client as mqtt
 
 use_simplification = True
 
-schedule_file = f"/home/tristan/projects/ctp_py/src/org/combinators/ctp/py/optimization/schedule.txt"
+project_folder = f"/home/tristan/projects/ctp_py/"
+opt_folder = f"{project_folder}src/org/combinators/ctp/py/optimization/"
+schedule_file = f"{opt_folder}schedule.txt"
+out_folder = f"{project_folder}resources/out_files/"
+
 number_of_instances = 10
 async_execution = "true"
 write_path_files = "true"
@@ -45,18 +51,26 @@ dimensionality_list = ["dimensionality_two_d_t", "dimensionality_three_d_t", "di
 
 
 def get_planner_string(i):
+    if i in planner_string_list:
+        return i
     return planner_string_list[i]
 
 
 def get_sampler_string(i):
+    if i in sampler_string_list:
+        return i
     return sampler_string_list[i]
 
 
 def get_state_validator_string(i):
+    if i in state_validator_string_list:
+        return i
     return state_validator_string_list[i]
 
 
 def get_motion_validator_string(i):
+    if i in motion_validator_string_list:
+        return i
     return motion_validator_string_list[i]
 
 
@@ -66,10 +80,6 @@ def get_optimization_objective_string(i):
 
 def get_cost_string(i):
     return cost_list[i]
-
-
-def get_cost_string(i):
-    return simplification_list[i]
 
 
 def get_dimensionality_string(i):
@@ -82,11 +92,12 @@ def get_invalid_output_data():
     return output
 
 
-def ctp_function(X, problem_instance, state_validator=state_validator_string_list[0]):
+def ctp_function(X, problem_instance, state_validator=state_validator_string_list[0], simplification="True",
+                 uuid_file="out.uuids"):
     client = mqtt.Client()
     client.on_connect = mqttClient.on_connect
     print("trying to connect")
-    client.connect("koopa.cs.tu-dortmund.de", 1883)
+    client.connect("localhost", 1883)
     print("Done Connecting")
 
     planner = X['planner']
@@ -95,15 +106,20 @@ def ctp_function(X, problem_instance, state_validator=state_validator_string_lis
     # simplification_time = X['simplification_time']
     planning_time = X['planning_time']
 
+    simpl_string = simplification_list[0] if simplification == "True" else simplification_list[1]
     new_uuid = uuid.uuid4()
+
+    with open(uuid_file, "a") as file_object:
+        file_object.write(f"{new_uuid}\n")
+
     json_string = f"""{{
-"planner" : "{planner_string_list[planner]}",
+"planner" : "{get_planner_string(planner)}",
 "sampler" : "{get_sampler_string(sampler)}",
-"stateValidator" : "{state_validator}",
+"stateValidator" : "{get_state_validator_string(state_validator)}",
 "motionValidator" : "{get_motion_validator_string(motion_validator)}",
 "costs" : "not_specified",
 "optObjective" : "not_specified",
-"simplification" : "sbmp_use_simplification",
+"simplification" : "{simpl_string}",
 "sceneInput" : "scene_input_data_file",
 "dimensionality" : "dimensionality_three_d_t",
 "id" : "{new_uuid}",
@@ -207,19 +223,39 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='ctp optimization')
     parser.add_argument('--problem', default="Abstract", help='name of the problem instance', type=str)
+    parser.add_argument('--schedule', default="False", help='Use schedule file', type=str)
 
     args = parser.parse_args()
     with open(schedule_file, 'r') as fin:
         data = fin.read().splitlines(True)
-    with open(schedule_file, 'w') as fout:
-        fout.writelines(data[1:])
 
-    main_problem_instance = data[0] if data else args.problem
-    print(f"Problem instance: {main_problem_instance}")
-    ctp_fun = partial(ctp_function, problem_instance=main_problem_instance,
-                      state_validator=state_validator_string_list[1]) if 'wafr' in main_problem_instance else partial(
-        ctp_function, problem_instance=main_problem_instance)
-    parameters_file = f"/home/tristan/projects/ctp_py/src/org/combinators/ctp/py/optimization/ctp_scenario_{main_problem_instance}.json"
-    optimizer.optimize(parameters_file, ctp_fun)
+    if args.schedule == "True":
+        print("Reading schedule file.")
+        for current_line in data:
+            main_problem_instance, out_file, use_simplification, param_file = current_line.strip().split(";")
+            print(
+                f"Starting problem instance: {main_problem_instance}. \r\n"
+                f"Output file: {out_file}, simplification: {use_simplification}, parameters file: {param_file}")
+
+            file_name = f"{out_folder}{datetime.now().isoformat(sep='_', timespec='minutes').replace(':', '').replace('-', '')}_{main_problem_instance}" if not out_file else out_file
+
+            ctp_fun = partial(ctp_function, problem_instance=main_problem_instance,
+                              state_validator=state_validator_string_list[1],
+                              simplification=use_simplification,
+                              uuid_file=f"{file_name}.uuids") if 'wafr' in main_problem_instance else partial(
+                ctp_function, problem_instance=main_problem_instance, simplification=use_simplification, uuid_file=f"{file_name}.uuids")
+            parameters_file = f"ctp_scenario_{param_file}.json"
+            optimizer.optimize(parameters_file, ctp_fun)
+            shutil.copyfile(f"{opt_folder}ctp_output_samples.csv", f"{file_name}")
+            with open(f"{file_name}.conf", "w") as text_file:
+                text_file.write(current_line)
+            print(f"Optimization run complete, copied file {opt_folder}ctp_output_samples.csv to {out_folder}{file_name}")
+    else:
+        main_problem_instance = args.problem
+        ctp_fun = partial(ctp_function, problem_instance=main_problem_instance,
+                          state_validator=state_validator_string_list[1]) if 'wafr' in main_problem_instance else partial(
+            ctp_function, problem_instance=main_problem_instance)
+        parameters_file = f"/home/tristan/projects/ctp_py/src/org/combinators/ctp/py/optimization/ctp_scenario_{main_problem_instance}.json"
+        optimizer.optimize(parameters_file, ctp_fun)
 
     print("End of ctp optimization.")

@@ -62,6 +62,7 @@ $sbmp_main.cost$
         solved = self.ss.solve(self.planning_time)
         if solved and self.ss.haveExactSolutionPath():
             print("Found exact solution:")
+            print(f"Simplification time: {self.simplification_time}")
             $sbmp_main.simplify$
         else:
             print("No exact solution found")

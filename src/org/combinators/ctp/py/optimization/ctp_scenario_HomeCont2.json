@@ -2,17 +2,15 @@
     "application_name": "ctp",
     "optimization_objectives": ["pathlength", "computationtime","failures"],
     "optimization_iterations": 50,
+    "resume_optimization": true,
+    "resume_optimization_data": "abstract1.csv",
     "print_parameter_importance": true,
-    "design_of_experiment": {
-        "doe_type": "random sampling",
-        "number_of_samples": 50
-    },
     "feasible_output": {
         "name": "Valid",
         "true_value": "true",
         "false_value": "false",
-        "enable_feasible_predictor": false,
-        "enable_feasible_predictor_grid_search_on_recall_and_precision": false
+        "enable_feasible_predictor": true,
+        "enable_feasible_predictor_grid_search_on_recall_and_precision": true
     },
     "input_parameters" : {
         "planner": {

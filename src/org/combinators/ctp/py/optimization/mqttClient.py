@@ -54,6 +54,8 @@ def on_result_message(client, userdata, msg, future, asyncloop):
             dct['computationtime'] = 5000000.0
             dct['Valid'] = "false"
 
+        dct['UUID'] = msg.topic.replace('bmResult', '')
+
         dct['failures'] = float(t['failures'])
 
         print(f"returning dct: {dct}")
