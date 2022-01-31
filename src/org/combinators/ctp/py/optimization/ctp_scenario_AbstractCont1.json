@@ -1,12 +1,10 @@
 {
     "application_name": "ctp",
     "optimization_objectives": ["pathlength", "computationtime","failures"],
-    "optimization_iterations": 50,
+    "optimization_iterations": 100,
+    "resume_optimization": true,
+    "resume_optimization_data": "cubicles1.csv",
     "print_parameter_importance": true,
-    "design_of_experiment": {
-        "doe_type": "random sampling",
-        "number_of_samples": 50
-    },
     "feasible_output": {
         "name": "Valid",
         "true_value": "true",
@@ -38,7 +36,7 @@
         },
         "planning_time": {
             "parameter_type" : "real",
-            "values" : [30,300]
+            "values" : [2,40]
         }
     }
 }

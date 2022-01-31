@@ -31,49 +31,58 @@ class plan:
     def __init__(self, planning_time=10.0, simplification_time=2.0):
         self.planning_time = planning_time
         self.simplification_time = simplification_time
-                # State Validator Arguments
-        env = "/home/tristan/projects/ctp_py/resources/Robots/RobotEnvironments/env4.stl"
-        package = "/home/tristan/projects/ctp_py/resources/Robots/RobotDescriptions/clsrobo_90441_description"
         
-        wafr_validator = WafrRobotStateValidator(package, env)
-        space = wafr_validator.getSamplingSpace()
+        space = ob.SE3StateSpace()
 
         # set the bounds
+                # create R^3 Bounds
+        bounds = ob.RealVectorBounds(3) #
+        bounds.setLow(0, -508.88)
+        bounds.setHigh(0, 319.62)
+        bounds.setLow(1, -230.13)
+        bounds.setHigh(1, 531.87)
+        bounds.setLow(2, -123.75)
+        bounds.setHigh(2, 101.0)
+        bounds.check()
+        space.setBounds(bounds)
         
 
-        #start state
-        start_list = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+        # create a start state
         start = ob.State(space)
-        for index, value in enumerate(start_list):
-            start[index] = value
+        startRef = start()
+        startRef.setX(-14.96)
+        startRef.setY(-48.62)
+        startRef.setZ(70.57)
+        startRef.rotation().setAxisAngle(1.0,0,0,1.570796326794)
+        # startRef.rotation().setIdentity()  # start[0] = 0
+        # start[1] = 0
+        # start[2] = 0
 
-        space.enforceBounds(start())
-
-        goal_list = [0.680678,-0.855211,-0.15708,0.0349066,-0.698132,1.3439,-1.5708,-0.523599,0.715585,0.0]
+        # create a goal state
         goal = ob.State(space)
-        for index, value in enumerate(goal_list):
-            goal[index] = value
+        goalRef = goal()
+        goalRef.setX(187.58)
+        goalRef.setY(-48.62)
+        goalRef.setZ(70.57)
+        goalRef.rotation().setAxisAngle(1.0,0,0,1.570796326794)
+        # goalRef.rotation().setIdentity()
 
-        space.enforceBounds(goal())
-        
-
-        
+        space.setStateSamplerAllocator(ob.StateSamplerAllocator(ob.CompoundStateSampler))
         self.si = ob.SpaceInformation(space)
-        self.si.setMotionValidator(ob.DiscreteMotionValidator(self.si))
-        self.si.setStateValidityChecker(ob.StateValidityCheckerFn(partial(wafr_validator.isValid, self.si)))
+        self.si.setMotionValidator(FclMotionValidator(self.si))
+        self.si.setStateValidityChecker(FclStateValidator(self.si))
+        self.si.setStateValidityCheckingResolution(0.01)
         
-        self.si.setValidStateSamplerAllocator(ob.ValidStateSamplerAllocator(ob.GaussianValidStateSampler))
 
-        asd = ob.StateValidityCheckerFn(partial(wafr_validator.isValid, self.si))
 
         self.ss = og.SimpleSetup(self.si)
-        p = og.PRM(self.si)
+        p = og.RRTConnect(self.si)
         self.ss.setPlanner(p)
         self.ss.setStartAndGoalStates(start, goal)
         self.ss.setup()
         self.ss.getPlanner().checkValidity()
 
-        #self.solve()
+        self.solve()
         np.set_printoptions(formatter={'float':'{:0.5f}'.format})
         #print(f"solution path:")
         #[print(f"RealVectorState {v}") for v in path_data.path_list]
@@ -82,6 +91,7 @@ class plan:
         solved = self.ss.solve(self.planning_time)
         if solved and self.ss.haveExactSolutionPath():
             print("Found exact solution:")
+            print(f"Simplification time: {self.simplification_time}")
             self.ss.simplifySolution(self.simplification_time)
         else:
             print("No exact solution found")
