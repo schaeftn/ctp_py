@@ -1,0 +1,35 @@
+{
+    "application_name": "ctp",
+    "optimization_objectives": ["pathlength", "computationtime","failures"],
+    "optimization_iterations": 50,
+    "print_parameter_importance": true,
+    "design_of_experiment": {
+        "doe_type": "random sampling",
+        "number_of_samples": 50
+    },
+    "feasible_output": {
+        "name": "Valid",
+        "true_value": "true",
+        "false_value": "false",
+        "enable_feasible_predictor": false,
+        "enable_feasible_predictor_grid_search_on_recall_and_precision": false
+    },
+    "input_parameters" : {
+        "planner": {
+            "parameter_type" : "categorical",
+            "values" : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+        },
+        "sampler": {
+            "parameter_type" : "categorical",
+            "values" : [0, 1, 2, 3, 4, 5]
+        },
+        "motionValidator": {
+            "parameter_type" : "categorical",
+            "values" : [0]
+        },
+        "planning_time": {
+            "parameter_type" : "real",
+            "values" : [2,8]
+        }
+    }
+}

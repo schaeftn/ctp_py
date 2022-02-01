@@ -1,6 +1,6 @@
 {
     "application_name": "ctp",
-    "optimization_objectives": ["pathlength", "computationtime","failures"],
+    "optimization_objectives": ["pathlength", "computationtime","failures","Valid"],
     "optimization_iterations": 50,
     "resume_optimization": true,
     "resume_optimization_data": "abstract1.csv",
@@ -10,7 +10,7 @@
         "true_value": "true",
         "false_value": "false",
         "enable_feasible_predictor": true,
-        "enable_feasible_predictor_grid_search_on_recall_and_precision": true
+        "enable_feasible_predictor_grid_search_on_recall_and_precision": false
     },
     "input_parameters" : {
         "planner": {

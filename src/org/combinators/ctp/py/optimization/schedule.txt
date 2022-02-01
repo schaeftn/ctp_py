@@ -1,9 +1,0 @@
-Abstract;abstract1.csv;True;Abstract
-Apartment;ApartmentCont1.csv;True;ApartmentCont1
-cubicles;cubiclesCont1.csv;True;cubiclesCont1
-pipedream;pipedreamCont1.csv;True;pipedreamCont1
-Apartment;ApartmentCont2.csv;True;ApartmentCont2
-cubicles;cubiclesCont2.csv;True;cubiclesCont2
-pipedream;pipedreamCont2.csv;True;pipedreamCont2
-Home;HomeCont1.csv;True;HomeCont1
-Home;HomeCont2.csv;True;HomeCont2

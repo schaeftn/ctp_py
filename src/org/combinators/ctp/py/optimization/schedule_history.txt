@@ -18,3 +18,15 @@ wafr3;;False;wafr3
 wafr3_nobaserotation;;False;wafr3_nobaserotation
 wafr4;;False;wafr4
 wafr4_wide;;False;wafr4_wide
+Abstract;abstract1.csv;True;Abstract
+Apartment;ApartmentCont1.csv;True;ApartmentCont1
+cubicles;cubiclesCont1.csv;True;cubiclesCont1
+pipedream;pipedreamCont1.csv;True;pipedreamCont1-redo states
+Apartment;ApartmentCont2.csv;True;ApartmentCont2-skipped
+cubicles;cubiclesCont2.csv;True;cubiclesCont2-skipped
+pipedream;pipedreamCont2.csv;True;pipedreamCont2-skipped
+Home;HomeCont2.csv;True;HomeCont2-skipped
+Home;HomeCont1.csv;True;HomeCont1
+pipedream;pipedreamCont1.csv;True;pipedreamCont1
+wafr2_6dof;;True;wafr2_6dof
+wafr2_10dof;;True;wafr2_10dof
