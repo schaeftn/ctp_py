@@ -18,6 +18,8 @@ config_files = ["Abstract", "Apartment", "Apartment_hard", "Easy", "Home", "Twis
                 "spirelli"]
 
 mypath = "/home/tristan/projects/hypermapper/outputs"
+local_path_win = "C:\\workspace_py\\ctp_py\\resources\\out_files"
+transfer_plot_win = "C:\\workspace_py\\ctp_py\\resources\\out_files\\transfer_plot"
 p_out_folder = "/home/tristan/projects/hypermapper/problems_output"
 #pp_out_folder = "/home/tristan/projects/hypermapper/problems_pareto_output"
 pp_out_folder = "/home/tristan/projects/hypermapper/outputs/candidates"
@@ -56,6 +58,20 @@ def get_data_files():
     files_nested = [
         [os.path.join(root, c_file) for c_file in files if isfile(join(root, c_file)) and c_file.endswith(".csv")]
         for root, dirs, files in walk(mypath)]
+    only_files = reduce(lambda x, y: x + y, files_nested)
+    for fi in only_files:
+        print(f"reading fi: {fi}")
+        pd.read_csv(fi)
+    data_frame_list = [pd.read_csv(fi) for fi in only_files]
+    data_frames = zip(data_frame_list, only_files)
+    return data_frames
+
+
+def get_data_files_transfer_plots():
+    files_nested = [
+        [os.path.join(root, c_file) for c_file in files if
+         isfile(join(root, c_file)) and not c_file.endswith(".conf") and not c_file.endswith("uuids")]
+        for root, dirs, files in walk(transfer_plot_win)]
     only_files = reduce(lambda x, y: x + y, files_nested)
     for fi in only_files:
         print(f"reading fi: {fi}")

@@ -32,9 +32,9 @@ planner_readable_strings = ["PRM", "PRM*", "Lazy PRM",
                        "RRT#", "RRTXstatic", "Informed RRT Star",
                        "BIT Star"]
 
-sampler_readable_string_list = ["Uniform Valid State", "OB Valid State",
-                       "Gaussian_Valid_State", "Max Clearance Valid State",
-                       "Uniform Space Sample", "Gaussian Space Sample"]
+sampler_readable_string_list = ["Uniform valid state", "Obstacle-based valid state",
+                       "Gaussian valid state", "Max. clearance valid state",
+                       "Uniform space sample", "Uniform space sample"]
 
 
 plot_symbols = ["x", "circle", "star-diamond", "cross", "hash"]
@@ -56,10 +56,9 @@ def get_single_plot_color(sampler):
         return "blue"
     if sampler == 'sbmp_max_clearance_valid_state_sampler':
         return "goldenrod"
-    if sampler == 'sbmp_uniform_space_sampler':
-        return "magenta"
-    if sampler == 'sbmp_gaussian_space_sampler':
-        return "black"
+    if sampler == 'sbmp_uniform_space_sampler' or sampler == 'sbmp_gaussian_space_sampler':
+        return "darkorchid"
+
 
 
 def get_point_colors(samplers):
@@ -75,10 +74,11 @@ def get_planner_trace(data_frame, planner, id):
             [get_planner_string(t_p) for t_p in data_frame.planner])])
 
     #print(data_frame.pathlength)
-    print(f"Planners: \r\n{data_frame.planner}")
-    print(f"Planner: {planner}")
+    #print(f"Planners: \r\n{data_frame.planner}")
+    #print(f"Planner: {planner}")
     filtered_df = data_frame[data_frame.planner == planner]
     print(filtered_df)
+    print(f"id: {id}")
 
     return go.Scatter(x=filtered_df.pathlength, y=[t / 1000.0 for t in filtered_df.computationtime],
                       text=filtered_df.hovertext,
@@ -106,7 +106,7 @@ def get_sampler_trace(data_frame, sampler_id):
 
     #print(data_frame.pathlength)
     filtered_df = data_frame[data_frame.sampler == sampler_id]
-    print(filtered_df)
+    # print(filtered_df)
 
     c = get_single_plot_color(get_sampler_string(sampler_id))
 
@@ -152,16 +152,20 @@ for root, dirs, files in walk(local_machine_candidates_path):
 
         sorted_planner_histogram = sorted(planner_histogram.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
 
-        planner_list = [sorted_planner_histogram[i][0] for i in range(num_planners)]
-        print(f"sorted_planner_histogram: {sorted_planner_histogram}")
-        for i in range(num_planners):
-            fig.add_trace(get_planner_trace(new_data_frame, sorted_planner_histogram[i][0], i))
+        num_planners_histogram = len(sorted_planner_histogram)
 
-        all_points_df = new_data_frame[new_data_frame.planner.isin(planner_list)]
+        if sorted_planner_histogram:
+            planner_list = [sorted_planner_histogram[i][0] for i in range(min(num_planners, num_planners_histogram))]
+            print(f"sorted_planner_histogram: {sorted_planner_histogram}")
+            for i in range(min(num_planners, num_planners_histogram)):
+                fig.add_trace(get_planner_trace(new_data_frame, sorted_planner_histogram[i][0], i))
 
-        for s in range(6):
-            fig.add_trace(get_sampler_trace(all_points_df, s))
+            all_points_df = new_data_frame[new_data_frame.planner.isin(planner_list)]
 
+            for s in range(6):
+                fig.add_trace(get_sampler_trace(all_points_df, s))
+        else:
+            print(f"No planners in histogram: {sorted_planner_histogram}")
 
         #if show_other_planners:
         #    fig.add_trace()
